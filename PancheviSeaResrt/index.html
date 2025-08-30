@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panchevi Sea Resort Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #f8f9fa;
+            --accent: #ff6d00;
+            --text: #202124;
+            --light-text: #5f6368;
+            --border: #dadce0;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 16px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .date-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .date-input {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        input[type="date"], input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        input.error, textarea.error {
+            border-color: var(--error);
+            background-color: #ffebee;
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        button.secondary {
+            background-color: var(--secondary);
+            color: var(--text);
+        }
+        
+        button.secondary:hover {
+            background-color: #e8eaed;
+        }
+        
+        button.success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        button.success:hover {
+            background-color: #3d8b40;
+        }
+        
+        button.warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        button.warning:hover {
+            background-color: #e68900;
+        }
+        
+        button.error {
+            background-color: var(--error);
+            color: white;
+        }
+        
+        button.error:hover {
+            background-color: #d32f2f;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .small-button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            width: auto;
+        }
+        
+        .weather-days {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .weather-day {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .weather-date {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+        }
+        
+        .weather-temp {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+        
+        .weather-desc {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .schedule-dates {
+            color: var(--light-text);
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: var(--secondary);
+            border-radius: 8px;
+        }
+        
+        .schedule-status {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .available {
+            background-color: #e8f5e9;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .not-available {
+            background-color: #ffebee;
+            color: var(--error);
+            font-weight: bold;
+        }
+        
+        .conflict-info {
+            background-color: #fff8e1;
+            color: var(--warning);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .user-list {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+        
+        .user-item {
+            padding: 15px;
+            background-color: var(--secondary);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .user-item.active {
+            border-left: 4px solid var(--primary);
+        }
+        
+        .user-item.past {
+            border-left: 4px solid var(--success);
+        }
+        
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-dates {
+            font-size: 1rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .user-dates:hover {
+            background-color: #e8f0fe;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .user-actions button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .user-status {
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        
+        .status-checked-in {
+            background-color: #e8f5e9;
+            color: var(--success);
+        }
+        
+        .status-checked-out {
+            background-color: #ffebee;
+            color: var(--error);
+        }
+        
+        .status-upcoming {
+            background-color: #fff8e1;
+            color: var(--warning);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            background-color: var(--secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .tab-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        
+        .tab-badge.show {
+            display: flex;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .weather-placeholder {
+            text-align: center;
+            padding: 20px;
+            color: var(--light-text);
+            font-style: italic;
+        }
+        
+        .message-list {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+        
+        .message-item {
+            padding: 15px;
+            background-color: var(--secondary);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+        
+        .message-content {
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .message-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        
+        .message-reply {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .message-reply textarea {
+            min-height: 80px;
+            margin-bottom: 10px;
+        }
+        
+        .reply-content {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .reply-header {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .reply-time {
+            font-size: 0.8rem;
+            color: var(--light-text);
+        }
+        
+        .edit-message-form {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #fff8e1;
+            border-radius: 8px;
+        }
+        
+        .calendar-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .calendar-modal.show {
+            display: flex;
+        }
+        
+        .calendar-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-title {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .calendar-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light-text);
+        }
+        
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+        
+        .calendar-day {
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .calendar-date {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .calendar-date.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .calendar-date.in-range {
+            background-color: #e3f2fd;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .sync-status {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-umbrella-beach"></i>
+        </div>
+        <h1>Panchevi Sea Resort</h1>
+        <p>Schedule & Weather</p>
+        <div class="user-info" id="user-info" style="display: none;">
+            <span id="user-display-name"></span>
+            <button class="logout-btn" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="auth-container" id="auth-container">
+            <h2>Вход в приложението</h2>
+            <div class="date-input">
+                <label for="user-name">Вашето име:</label>
+                <input type="text" id="login-name" placeholder="Въведете вашето име">
+                <div class="error-message" id="login-error"></div>
+            </div>
+            <button id="login-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                Влез в приложението
+            </button>
+        </div>
+        
+        <div id="app-content" style="display: none;">
+            <div class="tabs">
+                <div class="tab active" data-tab="reservation">
+                    Резервация
+                    <span class="tab-badge" id="reservation-badge"></span>
+                </div>
+                <div class="tab" data-tab="dates">
+                    Резервирани дати
+                    <span class="tab-badge" id="dates-badge"></span>
+                </div>
+                <div class="tab" data-tab="messages">
+                    Съобщения
+                    <span class="tab-badge" id="messages-badge"></span>
+                </div>
+                <div class="tab" data-tab="info">
+                    Инфо
+                    <span class="tab-badge" id="info-badge"></span>
+                </div>
+            </div>
+            
+            <div class="tab-content active" id="reservation">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Избор на дати
+                    </div>
+                    <div class="date-inputs">
+                        <div class="date-input">
+                            <label for="start-date">От дата:</label>
+                            <input type="date" id="start-date">
+                            <div class="error-message" id="start-date-error">Моля изберете начална дата</div>
+                        </div>
+                        <div class="date-input">
+                            <label for="end-date">До дата:</label>
+                            <input type="date" id="end-date">
+                            <div class="error-message" id="end-date-error">Моля изберете крайна дата</div>
+                        </div>
+                    </div>
+                    <div class="date-input">
+                        <label for="user-name">Име/Фамилия:</label>
+                        <input type="text" id="user-name" placeholder="Въведете вашето име">
+                        <div class="error-message" id="user-name-error">Моля въведете вашето име</div>
+                    </div>
+                    <button id="check-btn">
+                        <i class="fas fa-search"></i>
+                        Провери наличност и време
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-cloud-sun"></i>
+                        Метеорологична информация
+                    </div>
+                    <div class="weather-days" id="weather-days">
+                        <div class="weather-placeholder">Моля изберете дати, за да видите прогнозата</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-calendar-check"></i>
+                        Информация за резервация
+                    </div>
+                    <div class="schedule-dates" id="selected-dates">Изберете дати</div>
+                    <div id="conflict-info" class="conflict-info" style="display: none;"></div>
+                    <div class="schedule-status" id="availability-status">Моля изберете период</div>
+                    <button id="book-btn" class="secondary" disabled>
+                        <i class="fas fa-bookmark"></i>
+                        Резервирай сега
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="dates">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-users"></i>
+                        Списък с резервации
+                    </div>
+                    <ul class="user-list" id="user-list">
+                        <!-- User bookings will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="messages">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-comments"></i>
+                        Съобщения
+                    </div>
+                    <div class="date-input">
+                        <label for="message-name">Вашето име (по избор):</label>
+                        <input type="text" id="message-name" placeholder="Въведете вашето име">
+                    </div>
+                    <div class="date-input">
+                        <label for="message-content">Съобщение:</label>
+                        <textarea id="message-content" placeholder="Напишете вашето съобщение тук..."></textarea>
+                        <div class="error-message" id="message-content-error">Моля въведете съобщение</div>
+                    </div>
+                    <button id="send-message-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Изпрати съобщение
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-inbox"></i>
+                        Получени съобщения
+                    </div>
+                    <ul class="message-list" id="message-list">
+                        <!-- Messages will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="info">
+                <div class="instructions">
+                    <h3>Инструкции за използване:</h3>
+                    <ol>
+                        <li>Изберете начална и крайна дата за вашия престой</li>
+                        <li>Въведете вашето име или фамилия</li>
+                        <li>Натиснете "Провери наличност и време"</li>
+                        <li>Прегледайте метеорологичната информация</li>
+                        <li>Натиснете "Резервирай сега" за потвърждение</li>
+                    </ol>
+                    
+                    <h3>Как да инсталирате приложението на мобилно устройство:</h3>
+                    <ol>
+                        <li>Отворете браузъра си на телефона</li>
+                        <li>Напишете адреса на приложението</li>
+                        <li>Когато се отвори, отидете в менюто на браузъра</li>
+                        <li>Изберете "Добави към началния екран"</li>
+                        <li>Потвърдете инсталацията</li>
+                        <li>Приложението ще се появи като иконка на вашия начален екран</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div class="calendar-modal" id="calendar-modal">
+        <div class="calendar-content">
+            <div class="calendar-header">
+                <div class="calendar-title" id="calendar-title">Детайли за резервация</div>
+                <button class="calendar-close" id="calendar-close">&times;</button>
+            </div>
+            <div id="calendar-container">
+                <!-- Calendar will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="sync-status" id="sync-status">
+        <i class="fas fa-cloud"></i>
+        <span>Облачно съхранение</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const currentUser = db.collection('currentUser');
+            if (currentUser) {
+                document.getElementById('auth-container').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
+                document.getElementById('user-info').style.display = 'block';
+                document.getElementById('user-display-name').textContent = currentUser;
+                initApp();
+            }
+            
+            // Login button event
+            document.getElementById('login-btn').addEventListener('click', function() {
+                const userName = document.getElementById('login-name').value;
+                
+                if (!userName) {
+                    document.getElementById('login-error').textContent = 'Моля въведете вашето име';
+                    document.getElementById('login-error').classList.add('show');
+                    return;
+                }
+                
+                // Save user to localStorage
+                db.collection('currentUser', userName);
+                
+                document.getElementById('auth-container').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block';
+                document.getElementById('user-info').style.display = 'block';
+                document.getElementById('user-display-name').textContent = userName;
+                document.getElementById('login-error').classList.remove('show');
+                
+                // Initialize app
+                initApp();
+            });
+            
+            // Logout button event
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                db.collection('currentUser');
+                document.getElementById('auth-container').style.display = 'block';
+                document.getElementById('app-content').style.display = 'none';
+                document.getElementById('user-info').style.display = 'none';
+                document.getElementById('login-name').value = '';
+            });
+            
+            function initApp() {
+                // Set minimum date to today
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                const formatDate = (date) => {
+                    return date.toISOString().split('T')[0];
+                };
+                
+                document.getElementById('start-date').min = formatDate(today);
+                document.getElementById('end-date').min = formatDate(tomorrow);
+                
+                // Set initial start date to today and end date to tomorrow
+                document.getElementById('start-date').value = formatDate(today);
+                document.getElementById('end-date').value = formatDate(tomorrow);
+                
+                // Set message name to current user
+                document.getElementById('message-name').value = db.collection('currentUser');
+                
+                // Tab functionality
+                const tabs = document.querySelectorAll('.tab');
+                const tabContents = document.querySelectorAll('.tab-content');
+                
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+                        
+                        // Deactivate all tabs
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tabContents.forEach(tc => tc.classList.remove('active'));
+                        
+                        // Activate current tab
+                        tab.classList.add('active');
+                        document.getElementById(tabId).classList.add('active');
+                        
+                        // If users tab is selected, update the user list
+                        if (tabId === 'dates') {
+                            updateUserList();
+                        } else if (tabId === 'messages') {
+                            updateMessageList();
+                            document.getElementById('messages-badge').classList.remove('show');
+                        }
+                    });
+                });
+                
+                // Calendar modal functionality
+                const calendarModal = document.getElementById('calendar-modal');
+                const calendarClose = document.getElementById('calendar-close');
+                
+                calendarClose.addEventListener('click', function() {
+                    calendarModal.classList.remove('show');
+                });
+                
+                window.addEventListener('click', function(event) {
+                    if (event.target === calendarModal) {
+                        calendarModal.classList.remove('show');
+                    }
+                });
+                
+                // Initialize data
+                updateUserList();
+                updateMessageList();
+            }
+            
+            // Validation functions
+            function validateForm() {
+                let isValid = true;
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                const userName = document.getElementById('user-name').value;
+                
+                // Reset errors
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.classList.remove('show');
+                });
+                document.querySelectorAll('input').forEach(el => {
+                    el.classList.remove('error');
+                });
+                
+                // Validate start date
+                if (!startDate) {
+                    document.getElementById('start-date-error').classList.add('show');
+                    document.getElementById('start-date').classList.add('error');
+                    isValid = false;
+                }
+                
+                // Validate end date
+                if (!endDate) {
+                    document.getElementById('end-date-error').classList.add('show');
+                    document.getElementById('end-date').classList.add('error');
+                    isValid = false;
+                }
+                
+                // Validate user name
+                if (!userName) {
+                    document.getElementById('user-name-error').classList.add('show');
+                    document.getElementById('user-name').classList.add('error');
+                    isValid = false;
+                }
+                
+                // Validate date logic
+                if (startDate && endDate) {
+                    const start = new Date(startDate);
+                    const end = new Date(endDate);
+                    
+                    if (start >= end) {
+                        document.getElementById('end-date-error').textContent = 'Крайната дата трябва да е след началната';
+                        document.getElementById('end-date-error').classList.add('show');
+                        document.getElementById('end-date').classList.add('error');
+                        isValid = false;
+                    }
+                }
+                
+                return isValid;
+            }
+            
+            // Check button event
+            document.getElementById('check-btn').addEventListener('click', function() {
+                if (!validateForm()) {
+                    return;
+                }
+                
+                const startDate = new Date(document.getElementById('start-date').value);
+                const endDate = new Date(document.getElementById('end-date').value);
+                const userName = document.getElementById('user-name').value;
+                
+                // Update selected dates text
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                document.getElementById('selected-dates').textContent = 
+                    `От ${startDate.toLocaleDateString('bg-BG', options)} до ${endDate.toLocaleDateString('bg-BG', options)}`;
+                
+                // Check availability
+                checkAvailability(startDate, endDate);
+                
+                // Get weather data
+                getWeatherData(startDate, endDate);
+            });
+            
+            // Book button event
+            document.getElementById('book-btn').addEventListener('click', function() {
+                if (!validateForm()) {
+                    return;
+                }
+                
+                const startDate = new Date(document.getElementById('start-date').value);
+                const endDate = new Date(document.getElementById('end-date').value);
+                const userName = document.getElementById('user-name').value;
+                
+                // Check for conflicts
+                const conflict = checkForConflicts(startDate, endDate);
+                if (conflict) {
+                    alert('Не може да направите резервация за този период. Има съвпадаща резервация.');
+                    return;
+                }
+                
+                // Save booking to localStorage
+                saveBooking(userName, startDate, endDate);
+                
+                alert(`Резервацията за ${userName} е успешна!`);
+                
+                // Update availability status
+                document.getElementById('availability-status').textContent = 'Резервирано за вашия период';
+                document.getElementById('availability-status').className = 'schedule-status not-available';
+                document.getElementById('book-btn').disabled = true;
+                
+                // Show badge on dates tab
+                document.getElementById('dates-badge').classList.add('show');
+                
+                // Update user list
+                updateUserList();
+            });
+            
+            // Send message button event
+            document.getElementById('send-message-btn').addEventListener('click', function() {
+                const messageContent = document.getElementById('message-content').value;
+                const messageName = document.getElementById('message-name').value || 'Анонимен';
+                
+                // Reset errors
+                document.getElementById('message-content-error').classList.remove('show');
+                document.getElementById('message-content').classList.remove('error');
+                
+                // Validate message content
+                if (!messageContent) {
+                    document.getElementById('message-content-error').classList.add('show');
+                    document.getElementById('message-content').classList.add('error');
+                    return;
+                }
+                
+                // Save message to localStorage
+                saveMessage(messageName, messageContent);
+                
+                // Clear message field
+                document.getElementById('message-content').value = '';
+                
+                alert('Съобщението е изпратено успешно!');
+                
+                // Show badge on messages tab
+                document.getElementById('messages-badge').classList.add('show');
+            });
+            
+            // Input event listeners for real-time validation
+            document.getElementById('start-date').addEventListener('change', function() {
+                this.classList.remove('error');
+                document.getElementById('start-date-error').classList.remove('show');
+            });
+            
+            document.getElementById('end-date').addEventListener('change', function() {
+                this.classList.remove('error');
+                document.getElementById('end-date-error').classList.remove('show');
+            });
+            
+            document.getElementById('user-name').addEventListener('input', function() {
+                this.classList.remove('error');
+                document.getElementById('user-name-error').classList.remove('show');
+            });
+            
+            document.getElementById('message-content').addEventListener('input', function() {
+                this.classList.remove('error');
+                document.getElementById('message-content-error').classList.remove('show');
+            });
+            
+            // Function to check for date conflicts
+            function checkForConflicts(startDate, endDate) {
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                
+                for (const booking of bookings) {
+                    const existingStart = new Date(booking.startDate);
+                    const existingEnd = new Date(booking.endDate);
+                    
+                    // Check if the new booking overlaps with an existing one
+                    if (
+                        (startDate >= existingStart && startDate <= existingEnd) ||
+                        (endDate >= existingStart && endDate <= existingEnd) ||
+                        (startDate <= existingStart && endDate >= existingEnd)
+                    ) {
+                        return booking;
+                    }
+                }
+                
+                return null;
+            }
+            
+            // Mock function to check availability
+            function checkAvailability(startDate, endDate) {
+                const daysDiff = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                
+                // Check for conflicts with existing bookings
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                const conflict = checkForConflicts(startDate, endDate);
+                
+                const statusElement = document.getElementById('availability-status');
+                const conflictInfo = document.getElementById('conflict-info');
+                
+                if (conflict) {
+                    const conflictStart = new Date(conflict.startDate);
+                    const conflictEnd = new Date(conflict.endDate);
+                    const today = new Date();
+                    const daysRemaining = Math.ceil((conflictEnd - today) / (1000 * 60 * 60 * 24));
+                    
+                    statusElement.textContent = 'Периодът е зает';
+                    statusElement.className = 'schedule-status not-available';
+                    document.getElementById('book-btn').disabled = true;
+                    
+                    // Show conflict information
+                    conflictInfo.style.display = 'block';
+                    if (today >= conflictStart && today <= conflictEnd) {
+                        conflictInfo.innerHTML = `
+                            <strong>Активна резервация:</strong> ${conflict.userName}<br>
+                            <strong>Оставащи дни:</strong> ${daysRemaining > 0 ? daysRemaining : 0}
+                        `;
+                    } else {
+                        conflictInfo.innerHTML = `
+                            <strong>Резервация на:</strong> ${conflict.userName}<br>
+                            <strong>Период:</strong> ${conflictStart.toLocaleDateString('bg-BG')} - ${conflictEnd.toLocaleDateString('bg-BG')}
+                        `;
+                    }
+                } else {
+                    statusElement.textContent = `Свободно за ${daysDiff} нощувки`;
+                    statusElement.className = 'schedule-status available';
+                    document.getElementById('book-btn').disabled = false;
+                    conflictInfo.style.display = 'none';
+                }
+            }
+            
+            // Function to get weather data
+            function getWeatherData(startDate, endDate) {
+                const weatherContainer = document.getElementById('weather-days');
+                weatherContainer.innerHTML = '';
+                
+                const currentDate = new Date(startDate);
+                const end = new Date(endDate);
+                
+                // Weather icons based on conditions
+                const weatherIcons = {
+                    sunny: '☀️',
+                    cloudy: '☁️',
+                    rain: '🌧️',
+                    storm: '⛈️',
+                    partly: '⛅'
+                };
+                
+                while (currentDate <= end) {
+                    // Generate random weather for demo
+                    const conditions = ['sunny', 'cloudy', 'rain', 'storm', 'partly'];
+                    const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+                    
+                    const minTemp = 18 + Math.floor(Math.random() * 5);
+                    const maxTemp = minTemp + 5 + Math.floor(Math.random() * 7);
+                    
+                    const weatherDay = document.createElement('div');
+                    weatherDay.className = 'weather-day';
+                    
+                    weatherDay.innerHTML = `
+                        <div class="weather-date">${currentDate.toLocaleDateString('bg-BG', { day: 'numeric', month: 'short' })}</div>
+                        <div class="weather-icon">${weatherIcons[randomCondition]}</div>
+                        <div class="weather-temp">${maxTemp}°C</div>
+                        <div class="weather-desc">${getConditionText(randomCondition)}</div>
+                    `;
+                    
+                    weatherContainer.appendChild(weatherDay);
+                    
+                    // Move to next day
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            }
+            
+            function getConditionText(condition) {
+                const conditions = {
+                    sunny: 'Слънчево',
+                    cloudy: 'Облачно',
+                    rain: 'Дъжд',
+                    storm: 'Гръмотевици',
+                    partly: 'Облачно слънчево'
+                };
+                return conditions[condition];
+            }
+            
+            // Function to save booking to localStorage
+            function saveBooking(userName, startDate, endDate, id = null) {
+                // Get existing bookings or initialize empty array
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                
+                if (id !== null) {
+                    // Update existing booking
+                    bookings[id] = {
+                        userName: userName,
+                        startDate: startDate.toISOString(),
+                        endDate: endDate.toISOString(),
+                        bookedAt: bookings[id].bookedAt,
+                        status: bookings[id].status
+                    };
+                } else {
+                    // Add new booking
+                    bookings.push({
+                        userName: userName,
+                        startDate: startDate.toISOString(),
+                        endDate: endDate.toISOString(),
+                        bookedAt: new Date().toISOString(),
+                        status: 'upcoming' // upcoming, checked-in, checked-out
+                    });
+                }
+                
+                // Save back to localStorage
+                db.collection('bookings', JSON.stringify(bookings));
+                
+                // Update user list
+                updateUserList();
+            }
+            
+            // Function to update user list
+            function updateUserList() {
+                const userList = document.getElementById('user-list');
+                userList.innerHTML = '';
+                
+                // Get bookings from localStorage
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                
+                if (bookings.length === 0) {
+                    userList.innerHTML = '<li class="user-item">Няма резервации</li>';
+                    return;
+                }
+                
+                // Sort bookings by date (newest first)
+                bookings.sort((a, b) => new Date(b.bookedAt) - new Date(a.bookedAt));
+                
+                // Add each booking to the list
+                bookings.forEach((booking, index) => {
+                    const startDate = new Date(booking.startDate);
+                    const endDate = new Date(booking.endDate);
+                    const now = new Date();
+                    
+                    const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                    
+                    const li = document.createElement('li');
+                    
+                    // Determine booking status
+                    let statusClass = '';
+                    let statusText = '';
+                    let statusIcon = '';
+                    
+                    if (booking.status === 'checked-in') {
+                        statusClass = 'active';
+                        statusText = '<span class="user-status status-checked-in">Настанен</span>';
+                        statusIcon = '<i class="fas fa-arrow-right"></i>';
+                    } else if (booking.status === 'checked-out') {
+                        statusClass = 'past';
+                        statusText = '<span class="user-status status-checked-out">Освободен</span>';
+                        statusIcon = '<i class="fas fa-check"></i>';
+                    } else if (endDate < now) {
+                        statusClass = 'past';
+                        statusText = '<span class="user-status status-checked-out">Приключил</span>';
+                        statusIcon = '<i class="fas fa-check"></i>';
+                    } else if (startDate <= now && endDate >= now) {
+                        statusClass = 'active';
+                        statusText = '<span class="user-status status-upcoming">Активен</span>';
+                        statusIcon = '<i class="fas fa-arrow-right"></i>';
+                    } else {
+                        statusText = '<span class="user-status status-upcoming">Предстоящ</span>';
+                    }
+                    
+                    li.className = `user-item ${statusClass}`;
+                    
+                    li.innerHTML = `
+                        <div class="user-header">
+                            <div class="user-name">
+                                ${statusIcon}
+                                ${booking.userName}
+                            </div>
+                            ${statusText}
+                        </div>
+                        <div class="user-dates" data-index="${index}">
+                            ${startDate.toLocaleDateString('bg-BG', options)} - ${endDate.toLocaleDateString('bg-BG', options)}
+                        </div>
+                        <div class="user-actions">
+                            <button class="edit-btn secondary" data-index="${index}">
+                                <i class="fas fa-edit"></i> Редактирай
+                            </button>
+                            <button class="delete-btn warning" data-index="${index}">
+                                <i class="fas fa-trash"></i> Изтрий
+                            </button>
+                            ${booking.status !== 'checked-out' && endDate >= now ? `
+                                ${booking.status !== 'checked-in' ? `
+                                    <button class="checkin-btn success" data-index="${index}">
+                                        <i class="fas fa-sign-in-alt"></i> Нанасяне
+                                    </button>
+                                ` : `
+                                    <button class="checkout-btn error" data-index="${index}">
+                                        <i class="fas fa-sign-out-alt"></i> Освобождаване
+                                    </button>
+                                `}
+                            ` : ''}
+                        </div>
+                    `;
+                    
+                    userList.appendChild(li);
+                });
+                
+                // Add event listeners for date clicks
+                document.querySelectorAll('.user-dates').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        showCalendarForBooking(index);
+                    });
+                });
+                
+                // Add event listeners for edit buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        editBooking(index);
+                    });
+                });
+                
+                // Add event listeners for delete buttons
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        deleteBooking(index);
+                    });
+                });
+                
+                // Add event listeners for check-in buttons
+                document.querySelectorAll('.checkin-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        checkInBooking(index);
+                    });
+                });
+                
+                // Add event listeners for check-out buttons
+                document.querySelectorAll('.checkout-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        checkOutBooking(index);
+                    });
+                });
+                
+                // Update main status
+                updateMainStatus();
+            }
+            
+            // Function to show calendar for a booking
+            function showCalendarForBooking(index) {
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                const booking = bookings[index];
+                
+                const startDate = new Date(booking.startDate);
+                const endDate = new Date(booking.endDate);
+                
+                const calendarContainer = document.getElementById('calendar-container');
+                calendarContainer.innerHTML = `
+                    <div class="calendar-dates">
+                        <div class="calendar-day">Пн</div>
+                        <div class="calendar-day">Вт</div>
+                        <div class="calendar-day">Ср</div>
+                        <div class="calendar-day">Чт</div>
+                        <div class="calendar-day">Пт</div>
+                        <div class="calendar-day">Сб</div>
+                        <div class="calendar-day">Нд</div>
+                        
+                        <!-- Calendar dates would be generated here -->
+                        <!-- This is a simplified version for demo purposes -->
+                    </div>
+                    <div style="margin-top: 15px; text-align: center;">
+                        <strong>Резервация:</strong> ${booking.userName}<br>
+                        <strong>От:</strong> ${startDate.toLocaleDateString('bg-BG')}<br>
+                        <strong>До:</strong> ${endDate.toLocaleDateString('bg-BG')}<br>
+                        <strong>Статус:</strong> ${getStatusText(booking.status)}
+                    </div>
+                `;
+                
+                document.getElementById('calendar-title').textContent = `Резервация на ${booking.userName}`;
+                document.getElementById('calendar-modal').classList.add('show');
+            }
+            
+            function getStatusText(status) {
+                const statuses = {
+                    'upcoming': 'Предстоящ',
+                    'checked-in': 'Настанен',
+                    'checked-out': 'Освободен'
+                };
+                return statuses[status] || status;
+            }
+            
+            // Function to edit a booking
+            function editBooking(index) {
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                const booking = bookings[index];
+                
+                // Prefill the form
+                document.getElementById('start-date').value = formatDate(new Date(booking.startDate));
+                document.getElementById('end-date').value = formatDate(new Date(booking.endDate));
+                document.getElementById('user-name').value = booking.userName;
+                
+                // Switch to reservation tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+                
+                document.querySelector('[data-tab="reservation"]').classList.add('active');
+                document.getElementById('reservation').classList.add('active');
+                
+                // Change button text
+                document.getElementById('book-btn').innerHTML = '<i class="fas fa-save"></i> Запази промените';
+                document.getElementById('book-btn').disabled = false;
+                
+                // Store the index for saving
+                document.getElementById('book-btn').setAttribute('data-edit-index', index);
+                
+                // Check availability
+                checkAvailability(new Date(booking.startDate), new Date(booking.endDate));
+                
+                // Get weather data
+                getWeatherData(new Date(booking.startDate), new Date(booking.endDate));
+            }
+            
+            // Function to delete a booking
+            function deleteBooking(index) {
+                if (confirm('Сигурни ли сте, че искате да изтриете тази резервация?')) {
+                    const bookings = JSON.parse(db.collection('bookings') || '[]');
+                    bookings.splice(index, 1);
+                    db.collection('bookings', JSON.stringify(bookings));
+                    updateUserList();
+                    alert('Резервацията е изтрита успешно!');
+                }
+            }
+            
+            // Function to check in a booking
+            function checkInBooking(index) {
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                bookings[index].status = 'checked-in';
+                db.collection('bookings', JSON.stringify(bookings));
+                updateUserList();
+                alert('Гостът е настанен успешно!');
+            }
+            
+            // Function to check out a booking
+            function checkOutBooking(index) {
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                bookings[index].status = 'checked-out';
+                db.collection('bookings', JSON.stringify(bookings));
+                updateUserList();
+                alert('Гостът е освободил стаята успешно!');
+            }
+            
+            // Function to update main status
+            function updateMainStatus() {
+                const bookings = JSON.parse(db.collection('bookings') || '[]');
+                const now = new Date();
+                let activeBooking = null;
+                
+                for (const booking of bookings) {
+                    const startDate = new Date(booking.startDate);
+                    const endDate = new Date(booking.endDate);
+                    
+                    if (startDate <= now && endDate >= now && booking.status !== 'checked-out') {
+                        activeBooking = booking;
+                        break;
+                    }
+                }
+                
+                const statusElement = document.getElementById('availability-status');
+                
+                if (activeBooking) {
+                    statusElement.textContent = `Зает от ${activeBooking.userName}`;
+                    statusElement.className = 'schedule-status not-available';
+                } else {
+                    statusElement.textContent = 'Свободен';
+                    statusElement.className = 'schedule-status available';
+                }
+            }
+            
+            // Function to save message to localStorage
+            function saveMessage(userName, messageContent, id = null) {
+                // Get existing messages or initialize empty array
+                const messages = JSON.parse(db.collection('messages') || '[]');
+                
+                if (id !== null) {
+                    // Update existing message
+                    messages[id] = {
+                        userName: userName,
+                        content: messageContent,
+                        timestamp: messages[id].timestamp,
+                        replies: messages[id].replies || []
+                    };
+                } else {
+                    // Add new message
+                    messages.push({
+                        userName: userName,
+                        content: messageContent,
+                        timestamp: new Date().toISOString(),
+                        replies: []
+                    });
+                }
+                
+                // Save back to localStorage
+                db.collection('messages', JSON.stringify(messages));
+                
+                // Update message list
+                updateMessageList();
+            }
+            
+            // Function to update message list
+            function updateMessageList() {
+                const messageList = document.getElementById('message-list');
+                messageList.innerHTML = '';
+                
+                // Get messages from localStorage
+                const messages = JSON.parse(db.collection('messages') || '[]');
+                
+                if (messages.length === 0) {
+                    messageList.innerHTML = '<li class="message-item">Няма съобщения</li>';
+                    return;
+                }
+                
+                // Sort messages by date (newest first)
+                messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                // Add each message to the list
+                messages.forEach((message, index) => {
+                    const messageDate = new Date(message.timestamp);
+                    
+                    const li = document.createElement('li');
+                    li.className = 'message-item';
+                    
+                    li.innerHTML = `
+                        <div class="message-header">
+                            <span>${message.userName}</span>
+                            <span class="message-time">${messageDate.toLocaleDateString('bg-BG')} ${messageDate.toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <div class="message-content">${message.content}</div>
+                        <div class="message-actions">
+                            <button class="edit-message-btn small-button secondary" data-index="${index}">
+                                <i class="fas fa-edit"></i> Редактирай
+                            </button>
+                            <button class="delete-message-btn small-button error" data-index="${index}">
+                                <i class="fas fa-trash"></i> Изтрий
+                            </button>
+                        </div>
+                        <div class="message-reply">
+                            <textarea id="reply-${index}" placeholder="Напишете отговор..."></textarea>
+                            <input type="text" id="reply-name-${index}" placeholder="Вашето име (по избор)">
+                            <button class="secondary reply-btn small-button" data-index="${index}">Изпрати отговор</button>
+                            ${message.replies && message.replies.length > 0 ? 
+                                message.replies.map((reply, replyIndex) => {
+                                    const replyDate = new Date(reply.timestamp);
+                                    return `
+                                        <div class="reply-content">
+                                            <div class="reply-header">
+                                                <span>${reply.userName || 'Администратор'}</span>
+                                                <span class="reply-time">${replyDate.toLocaleDateString('bg-BG')} ${replyDate.toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}</span>
+                                            </div>
+                                            ${reply.content}
+                                        </div>
+                                    `;
+                                }).join('') : ''}
+                        </div>
+                    `;
+                    
+                    messageList.appendChild(li);
+                });
+                
+                // Add event listeners to edit message buttons
+                document.querySelectorAll('.edit-message-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        editMessage(index);
+                    });
+                });
+                
+                // Add event listeners to delete message buttons
+                document.querySelectorAll('.delete-message-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        deleteMessage(index);
+                    });
+                });
+                
+                // Add event listeners to reply buttons
+                document.querySelectorAll('.reply-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        const replyContent = document.getElementById(`reply-${index}`).value;
+                        const replyName = document.getElementById(`reply-name-${index}`).value || 'Администратор';
+                        
+                        if (!replyContent) {
+                            alert('Моля въведете отговор');
+                            return;
+                        }
+                        
+                        // Get messages from localStorage
+                        const messages = JSON.parse(db.collection('messages') || '[]');
+                        
+                        // Add reply to message
+                        if (!messages[index].replies) {
+                            messages[index].replies = [];
+                        }
+                        
+                        messages[index].replies.push({
+                            userName: replyName,
+                            content: replyContent,
+                            timestamp: new Date().toISOString()
+                        });
+                        
+                        // Save back to localStorage
+                        db.collection('messages', JSON.stringify(messages));
+                        
+                        // Update message list
+                        updateMessageList();
+                        
+                        alert('Отговорът е изпратен успешно!');
+                    });
+                });
+            }
+            
+            // Function to edit a message
+            function editMessage(index) {
+                const messages = JSON.parse(db.collection('messages') || '[]');
+                const message = messages[index];
+                
+                const messageItem = document.querySelectorAll('.message-item')[index];
+                
+                messageItem.innerHTML = `
+                    <div class="message-header">
+                        <span>${message.userName}</span>
+                        <span class="message-time">${new Date(message.timestamp).toLocaleDateString('bg-BG')} ${new Date(message.timestamp).toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <div class="edit-message-form">
+                        <textarea id="edit-message-${index}" placeholder="Редактирайте съобщението...">${message.content}</textarea>
+                        <div class="message-actions">
+                            <button class="save-message-btn small-button success" data-index="${index}">
+                                <i class="fas fa-save"></i> Запази
+                            </button>
+                            <button class="cancel-edit-btn small-button secondary" data-index="${index}">
+                                <i class="fas fa-times"></i> Отмени
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Add event listener for save button
+                document.querySelector(`.save-message-btn`).addEventListener('click', function() {
+                    const editedContent = document.getElementById(`edit-message-${index}`).value;
+                    
+                    if (!editedContent) {
+                        alert('Моля въведете съобщение');
+                        return;
+                    }
+                    
+                    saveMessage(message.userName, editedContent, index);
+                    alert('Съобщението е редактирано успешно!');
+                });
+                
+                // Add event listener for cancel button
+                document.querySelector(`.cancel-edit-btn`).addEventListener('click', function() {
+                    updateMessageList();
+                });
+            }
+            
+            // Function to delete a message
+            function deleteMessage(index) {
+                if (confirm('Сигурни ли сте, че искате да изтриете това съобщение?')) {
+                    const messages = JSON.parse(db.collection('messages') || '[]');
+                    messages.splice(index, 1);
+                    db.collection('messages', JSON.stringify(messages));
+                    updateMessageList();
+                    alert('Съобщението е изтрито успешно!');
+                }
+            }
+        });
+    </script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNZ76xizE9drsePfxS2UUumSBTEPwJPDA",
+    authDomain: "panchevisearesort.firebaseapp.com",
+    projectId: "panchevisearesort",
+    storageBucket: "panchevisearesort.firebasestorage.app",
+    messagingSenderId: "916282843357",
+    appId: "1:916282843357:web:096f14777db284b2c27b34",
+    measurementId: "G-455YDH8XYG"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+<script>
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+</body>
+</html>
